@@ -38,10 +38,15 @@ public class PackageResourceLoader  {
 	public Resource[] getResources(String basePackage) throws IOException {
 		Assert.notNull(basePackage, "basePackage  must not be null");
 		String location = ClassUtils.convertClassNameToResourcePath(basePackage);
+		// ？ClassLoad 如何理解
+
 		ClassLoader cl = getClassLoader();
 		URL url = cl.getResource(location);
+		// ？不使用 ClassLoad,直接使用 location 创建 File 不行么？
+		// 不行，经过试验拿到的是相对路径，最终获取不到文件
+		// ClassLoad.getResource()获取到的是 URL 是绝对路径
+		//File rootDir = new File(location);
 		File rootDir = new File(url.getFile());
-		
 		Set<File> matchingFiles = retrieveMatchingFiles(rootDir);
 		Resource[] result = new Resource[matchingFiles.size()];
 		int i=0;
